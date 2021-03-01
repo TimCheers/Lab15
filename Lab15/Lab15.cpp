@@ -74,4 +74,3 @@ int main()
     out(N, size);
     return 0;
 }
-
