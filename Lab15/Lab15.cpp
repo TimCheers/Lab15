@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <string>
+#include <stack>
 using namespace std;
 struct STR
 {
@@ -45,10 +46,58 @@ void shellSort(STR* arr, int size)
         }
     }
 }
+void Huarsort(STR*arr,int left,int right)
+{
+    int i, j, support;
+    STR tmp;
+    stack<int>st;
+    st.push(left);
+    st.push(right);
+    do
+    {
+        right = st.top();
+        st.pop();
+        left = st.top();
+        st.pop();
+        i = left;
+        j = right;
+        support = arr[(right + left) / 2].quantity;
+        do
+        {
+            while (arr[i].quantity < support)
+            {
+                i++;
+            }
+            while (support < arr[j].quantity)
+            {
+                j--;
+            }
+            if (i <= j)
+            {
+                tmp.quantity = arr[i].quantity;
+                arr[i].quantity = arr[j].quantity;
+                arr[j].quantity = tmp.quantity;
+                tmp.specialty = arr[i].specialty;
+                arr[i].specialty = arr[j].specialty;
+                arr[j].specialty = tmp.specialty;
+                i++;
+                j--;
+            }
+        } while (i <= j);
+        if (left < j) {
+            st.push(left);
+            st.push(j);
+        }
+        if (i < right) {
+            st.push(i);
+            st.push(right);
+        }
+    } while (!st.empty());
+}
 int main()
 {
     system("chcp 1251>nul");
-    int size = -1;
+    int size = -1, menu = -1;
     cout << "Введите количество элементов" << endl;
     while (size <= 0)
     {
@@ -70,7 +119,40 @@ int main()
         cout << endl;
     }
     out(N, size);
-    shellSort(N, size);
-    out(N, size);
+    while (menu != 4)
+    {
+        cout << "\nКоманды:\n1.Вывод\n2.Сортировка Хуара\n3.Сортировка Шелла\n4.стоп" << endl;
+        cin >> menu;
+        switch (menu)
+        {
+        case 1:
+        {
+            out(N, size);
+            break;
+        }
+        case 2:
+        {
+            Huarsort(N, 0, size - 1);
+            menu = 4;
+            out(N, size);
+            break;
+        }
+        case 3:
+        {
+            shellSort(N, size);
+            menu = 4;
+            out(N, size);
+            break;
+        }
+        case 4:
+        {
+            cout << "\nПрограмма остановлена." << endl;
+            break;
+        }
+        default:
+            cout << "\nНеизвестная команда!" << endl;
+            break;
+        }
+    }
     return 0;
 }
